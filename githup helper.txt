@@ -1,0 +1,5 @@
+الاوامر دى علشان لو عملت تعديل وعايز ارفع التعديل 
+
+git add .
+git commit -m "Message"
+git push
