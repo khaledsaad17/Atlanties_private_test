@@ -42,3 +42,5 @@ app.get('/protected',Auth,(req,res)=>{
     console.log("done you are authorized to login ...........")
     res.status(201).json({user:req.user})
 })
+
+app.get('/test', (req, res) => res.send('Hello World!from test api'))
