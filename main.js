@@ -44,3 +44,6 @@ app.get('/protected',Auth,(req,res)=>{
 })
 
 app.get('/test', (req, res) => res.send('Hello World!from test api'))
+app.get('khaled',(req,res)=>{
+    res.status(201).json({message:"hi khaled is herrrrrrrrrrrre....."})
+})

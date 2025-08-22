@@ -3,3 +3,6 @@ node_modules/
 
 # تجاهل ملفات البيئة
 .env
+
+# تجاهل ال vscode background color
+.vscode
