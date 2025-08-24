@@ -1,9 +1,10 @@
 require('dotenv').config();
 const  express = require('express');
+const JWTWEBTOKEN = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const login_route = require('./routers/login');
 const register_route = require('./routers/register');
-const Auth = require('./middleware/Auth');
+const {AuthMiddleware : Auth,Validate_Token} = require('./middleware/Auth');
 
 const app = express()
 
@@ -39,11 +40,27 @@ app.use('/register',register_route)
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/protected',Auth,(req,res)=>{
-    console.log("done you are authorized to login ...........")
+    console.log("done you are authorized to Enter system ...........")
     res.status(201).json({user:req.user})
 })
 
 app.get('/test', (req, res) => res.send('Hello World!from test api'))
 app.get('/khaled',(req,res)=>{
     res.status(201).json({message:"hi khaled is herrrrrrrrrrrre....."})
+})
+
+
+app.get('/refresh_token',Validate_Token,(req,res)=>{
+
+        const access_token = JWTWEBTOKEN.sign({
+            id : req.user.id,
+            name : req.user.name,
+        }, process.env.access_token_SECRET_KEY ,{ expiresIn:"1m" }
+        )
+
+        res.json({
+            message: "new access token is generated successfully.....",
+            token: access_token
+        });
+
 })

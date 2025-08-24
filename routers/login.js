@@ -1,11 +1,15 @@
 const express = require('express');
 const JWTWEBTOKEN = require('jsonwebtoken');
 const User_model = require('../models/User_DB'); 
+const Token = require('../models/User_Token_validation');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const JWT_KEY = process.env.SECRET_KEY;
 
 
+
+
+// محتاج اعمل تعديل علي حته انه لما يعمل Login ويكون فى token متهخزن من قبل كدا يعمل تعديل عليه ميضيفش علطول علشان انا عامل ال name unique فاا مش هيعرف يضيف token مضاف قبل كدا
 
 router.post('/',async (req,res)=>{
     try {
@@ -20,16 +24,28 @@ router.post('/',async (req,res)=>{
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        const token = JWTWEBTOKEN.sign({
+        // create refresh token
+        const token = new Token ({
+            username : valid_email.username,
+            refresh_token : JWTWEBTOKEN.sign({
             id : valid_email._id,
-            name:valid_email.username,
+            name : valid_email.username,
             email : valid_email.email
         }, JWT_KEY , { expiresIn:"30d" }
-        );
+        )});
+
+        const result = await token.save();
+        console.log(result)
+        // create access token with little time 
+        const access_token = JWTWEBTOKEN.sign({
+            id : result._id,
+            name : result.username,
+        }, process.env.access_token_SECRET_KEY ,{ expiresIn:"1m" }
+        )
 
         res.json({
             message: "Login successful",
-            token: token
+            token: access_token
         });
     } catch (err) {
         console.log(err)

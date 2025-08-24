@@ -1,4 +1,5 @@
 const  jwt = require('jsonwebtoken');
+const Refresh_Token = require('../models/User_Token_validation');
 const SECRET_KEY = process.env.SECRET_KEY;
 
 function AuthMiddleware(req, res, next) {
@@ -15,7 +16,7 @@ function AuthMiddleware(req, res, next) {
                 message: 'Invalid Token Format'
             })
         }
-        const decode = jwt.verify(token, SECRET_KEY);
+        const decode = jwt.verify(token, process.env.access_token_SECRET_KEY);
         req.user = decode
         next()
     } catch (error) {
@@ -40,4 +41,25 @@ function AuthMiddleware(req, res, next) {
     }
 }
 
-module.exports = AuthMiddleware
+async function Validate_Token(req,res,next) {
+    const { username } = req.body;
+    console.log(username)
+    const isvalid_user = await Refresh_Token.findOne({username})
+    if (!isvalid_user) {
+        return res.status(401).json({
+                message: 'Session Expired please login again'
+            })
+    }
+    try {
+        const decode = jwt.verify( isvalid_user.refresh_token , SECRET_KEY );
+        req.user = decode;
+        next();
+    } catch (err) {
+        return res.status(401).json({
+                message: 'Session Expired please login again',
+                error: err.message,
+            })
+    }
+}
+
+module.exports = {AuthMiddleware,Validate_Token}
