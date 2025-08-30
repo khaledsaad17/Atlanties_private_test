@@ -31,22 +31,30 @@ router.post('/',async (req,res)=>{
             id : valid_email._id,
             name : valid_email.username,
             email : valid_email.email
-        }, JWT_KEY , { expiresIn:"30d" }
+        }, JWT_KEY , { expiresIn : "30d" }
         )});
 
-        const result = await token.save();
-        console.log(result)
-        // create access token with little time 
-        const access_token = JWTWEBTOKEN.sign({
-            id : result._id,
-            name : result.username,
-        }, process.env.access_token_SECRET_KEY ,{ expiresIn:"1m" }
+        // here update the data in db if exist
+        const update_refresh_token = await Token.findOneAndUpdate(
+            { username : valid_email.username }, // hrer we add filter
+            { refresh_token : token.refresh_token },   // here the update we want to add
+            { new: true }
         )
+        if ( !update_refresh_token ) {
+            const result = await token.save();
+            var access_token = CreateAccessToken( result._id , result.username )
+        }else{
+            access_token = CreateAccessToken( 
+                update_refresh_token._id , 
+                update_refresh_token.username )
+            
+        }
 
         res.json({
             message: "Login successful",
             token: access_token
         });
+
     } catch (err) {
         console.log(err)
         return res.status(500).json({ message: "Internal server error" });
@@ -54,6 +62,13 @@ router.post('/',async (req,res)=>{
 })
 
 
-
+function CreateAccessToken(id,name) {
+    // create access token with little time 
+        return JWTWEBTOKEN.sign({
+            id ,
+            name ,
+        }, process.env.access_token_SECRET_KEY ,{ expiresIn:"1h" })
+}
 
 module.exports = router
+

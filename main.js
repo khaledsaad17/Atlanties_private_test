@@ -1,28 +1,16 @@
 require('dotenv').config();
 const  express = require('express');
 const JWTWEBTOKEN = require('jsonwebtoken');
-const mongoose = require('mongoose');
-const login_route = require('./routers/login');
-const register_route = require('./routers/register');
-const {AuthMiddleware : Auth,Validate_Token} = require('./middleware/Auth');
+const handle_uncaughted_errors = require('./middleware/handle_errors')
+const { AuthMiddleware : Auth , Validate_Token } = require('./middleware/Auth');
+
 
 const app = express()
+require('./StartUp/routes')(app)
+require('./StartUp/mongo_db')();
+require('./utils/logger');
 
 
-
-
-app.use(express.urlencoded({extended:true}))
-app.use(express.json());
-
-
-// database connection
-const local_db_url = process.env.local_db_url
-console.log(local_db_url)
-try {
-    mongoose.connect(local_db_url).then(console.log("database is running"))
-} catch (err) {
-    console.log("error in database connection \n"+err)
-}
 
 
 // server listen
@@ -30,23 +18,12 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 
-// login route
-app.use('/login',login_route)
 
+app.get('/', (req, res) => res.header('khaled','saad').send('Hello World!'))
 
-// register route
-
-app.use('/register',register_route)
-
-app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/protected',Auth,(req,res)=>{
     console.log("done you are authorized to Enter system ...........")
     res.status(201).json({user:req.user})
-})
-
-app.get('/test', (req, res) => res.send('Hello World!from test api'))
-app.get('/khaled',(req,res)=>{
-    res.status(201).json({message:"hi khaled is herrrrrrrrrrrre....."})
 })
 
 
@@ -64,3 +41,22 @@ app.get('/refresh_token',Validate_Token,(req,res)=>{
         });
 
 })
+
+    // throw new Error("this is new error from end point api");
+
+
+app.use('/error',(req,res,next)=>{
+    // throw new Error("this is new error from end point api");
+    const p = Promise.reject("this is test for rejection in promis")
+    next();
+})
+
+// this for handle error that not caughted from try catch mechanisme
+// app.use(handle_uncaughted_errors,(req,res)=>{
+//         res.send("err 404 page not found");
+// })
+
+// setTimeout(() => {
+//     const p = Promise.reject("this is test for rejection in promis")
+// }, 5000);
+// throw new Error("uncaughtexecption is happend in line 73")
