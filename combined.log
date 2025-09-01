@@ -70,3 +70,5 @@
 {"level":"info","message":"database is running","service":"user-service","timestamp":"2025-09-01 20:14:14"}
 {"level":"info","message":"database is running","service":"user-service","timestamp":"2025-09-01 20:14:16"}
 {"level":"info","message":"database is running","service":"user-service","timestamp":"2025-09-01 20:15:24"}
+{"level":"info","message":"database is running","service":"user-service","timestamp":"2025-09-01 20:34:54"}
+{"level":"info","message":"database is running","service":"user-service","timestamp":"2025-09-01 20:36:55"}

@@ -58,8 +58,7 @@ router.post('/:token',async(req,res)=>{
 
         if (!is_exist) return res.status(400).json({ message: "Invalid or expired token" });
         
-        const password = req.body.password;
-        const re_password = req.body.re_password
+        const {password,re_password} = req.body;
         
         if (password !== re_password) {
             res.status(400).json({ message: "password are not equality" });

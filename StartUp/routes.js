@@ -10,4 +10,5 @@ module.exports = function (app) {
     app.use(express.json());
     app.use('/login',login_route);
     app.use('/register',register_route);
+    app.use('/reset-password',forget_password);
 }
