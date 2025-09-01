@@ -52,6 +52,7 @@ async function Validate_Token(req,res,next) {
     }
     try {
         const decode = jwt.verify( isvalid_user.refresh_token , SECRET_KEY );
+        console.log(decode)
         req.user = decode;
         next();
     } catch (err) {

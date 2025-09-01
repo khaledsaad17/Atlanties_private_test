@@ -51,10 +51,11 @@ app.use('/error',(req,res,next)=>{
     next();
 })
 
-// this for handle error that not caughted from try catch mechanisme
-// app.use(handle_uncaughted_errors,(req,res)=>{
-//         res.send("err 404 page not found");
-// })
+
+// this is for handle defulte api endpoint
+app.use((req,res)=>{
+        res.status(404).json({message:"err 404 page not found"});
+})
 
 // setTimeout(() => {
 //     const p = Promise.reject("this is test for rejection in promis")

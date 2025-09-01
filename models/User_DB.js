@@ -40,6 +40,14 @@ const userSchema = new mongoose.Schema({
     country:{
         type: String,
         required: [true, "country is required"]
+    },
+    resetPasswordToken: {
+        type: String ,
+        default: undefined
+    },
+    resetPasswordExpire: {
+        type: Date ,
+        default: undefined
     }
 },{ timestamps: true });
 
