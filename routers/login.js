@@ -3,6 +3,7 @@ const JWTWEBTOKEN = require('jsonwebtoken');
 const User_model = require('../models/User_DB'); 
 const Token = require('../models/User_Token_validation');
 const bcrypt = require('bcrypt');
+const loginLimiter = require('../Controller/requests_rate_Limite');
 const router = express.Router();
 const JWT_KEY = process.env.SECRET_KEY;
 
@@ -11,7 +12,7 @@ const JWT_KEY = process.env.SECRET_KEY;
 
 // محتاج اعمل تعديل علي حته انه لما يعمل Login ويكون فى token متهخزن من قبل كدا يعمل تعديل عليه ميضيفش علطول علشان انا عامل ال name unique فاا مش هيعرف يضيف token مضاف قبل كدا
 
-router.post('/',async (req,res)=>{
+router.post('/',loginLimiter,async (req,res)=>{
     try {
         const {email,password} = req.body;
         const valid_email = await User_model.findOne({email}).select({username:1,email:1,password:1});

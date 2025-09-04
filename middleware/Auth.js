@@ -18,6 +18,7 @@ function AuthMiddleware(req, res, next) {
         }
         const decode = jwt.verify(token, process.env.access_token_SECRET_KEY);
         req.user = decode
+        console.log(req.user);
         next()
     } catch (error) {
         if (error instanceof jwt.TokenExpiredError) {
