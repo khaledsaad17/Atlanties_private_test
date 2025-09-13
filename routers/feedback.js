@@ -4,12 +4,12 @@ const  { AuthMiddleware : authorization }  = require('../middleware/Auth');
 const { route } = require('./login');
 const router = express.Router();
 
-
+// add new feedback
 router.post('/',authorization,async (req,res)=>{
     try {
         const {rate,feedback_text} = req.body;
         const result  = new User_feedback({
-            username : req.user.name,
+            username : req.user.name, // take it from jwt while decode it in auth middleware
             rate,
             feedback_text
         });
@@ -36,6 +36,7 @@ router.post('/',authorization,async (req,res)=>{
     }
 })
 
+// get all feedback 
 router.get('/', async (req,res)=>{
     const all_feedback = await User_feedback.find({},{updatedAt : 0 , _id : 0 ,__v : 0})
     .sort({createdAt : -1}) // order by Date

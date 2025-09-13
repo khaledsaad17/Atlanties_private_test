@@ -6,3 +6,10 @@ node_modules/
 
 # تجاهل ال vscode background color
 .vscode
+
+# cloudinary تجاهله 
+.routers/cloudinary_config.js
+
+
+# helper
+.helper.js

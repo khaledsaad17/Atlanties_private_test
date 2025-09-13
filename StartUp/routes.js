@@ -4,7 +4,8 @@ const login_route = require('../routers/login');
 const register_route = require('../routers/register');
 const forget_password = require('../routers/forget_password');
 const feedback_route = require('../routers/feedback');
-
+// const upload_image = require('../routers/cloudinary_config');
+const rooms_details = require('../routers/rooms_details');
 module.exports = function (app) {
     app.use(cors());
     app.use(express.urlencoded({extended:true}));
@@ -13,4 +14,6 @@ module.exports = function (app) {
     app.use('/register',register_route);
     app.use('/reset-password',forget_password);
     app.use('/feedback',feedback_route);
+    // app.use('/upload',upload_image);
+    app.use('/room',rooms_details);
 }
